@@ -7,10 +7,11 @@ export const projects = writable([
   { name: 'Legacy API', color: 'rose' },
 ]);
 
-export const events = writable([
+const initialEvents = [
   {
     status: 200,
     name: 'user.created',
+    id: 'evt_1J9Xqj2eZvKYlo2ChBqjBvjq',
     path: 'POST /webhooks/users',
     time: '2m ago',
     project: 'My Awesome Project',
@@ -20,6 +21,7 @@ export const events = writable([
   {
     status: 500,
     name: 'invoice.payment_failed',
+    id: 'evt_2K9Xqj2eZvKYlo2ChBqjBvkq',
     path: 'POST /webhooks/invoices',
     time: '22m ago',
     project: 'E-commerce Platform',
@@ -28,14 +30,21 @@ export const events = writable([
   {
     status: 200,
     name: 'api.key.created',
+    id: 'evt_3L9Xqj2eZvKYlo2ChBqjBvlq',
     path: 'POST /webhooks/apikeys',
     time: '1h ago',
     project: 'Legacy API',
     projectColor: 'rose',
   },
-]);
+];
+
+export const events = writable(initialEvents);
+
+const activeEvent = initialEvents.find(e => e.active === true);
+
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 export const selectedProject = writable('All Projects');
-export const selectedEvent = writable(null);
-export const theme = writable('dark');
+export const selectedEvent = writable(activeEvent || null);
+export const theme = writable(prefersDark ? 'dark' : 'light');
 
