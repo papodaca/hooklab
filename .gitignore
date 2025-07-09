@@ -10,3 +10,4 @@ db.sqlite
 .env.*
 !.env.example
 node_modules
+Public/**
