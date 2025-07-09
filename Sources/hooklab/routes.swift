@@ -6,8 +6,10 @@ func routes(_ app: Application) throws {
         req.redirect(to: "index.html", redirectType: .permanent)
     }
 
-    try app.register(collection: ProjectsController())
-    try app.register(collection: HookController())
+    let api = app.grouped("api")
+
+    try api.register(collection: ProjectsController())
+    try api.register(collection: HookController())
 
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 }
