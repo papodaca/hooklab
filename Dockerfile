@@ -1,4 +1,18 @@
 # ================================
+# Frontend Build Stage
+# ================================
+FROM node:20 AS frontend-build
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install
+COPY index.html .
+COPY tailwind.config.js .
+COPY svelte.config.js .
+COPY vite.config.js .
+COPY Frontend/ ./Frontend/
+RUN yarn build
+
+# ================================
 # Build image
 # ================================
 FROM swift:6.0-noble AS build
@@ -22,6 +36,9 @@ RUN swift package resolve \
 
 # Copy entire repo into container
 COPY . .
+
+# Copy built frontend assets from the frontend-build stage
+COPY --from=frontend-build /app/Public ./Public
 
 # Build the application, with optimizations, with static linking, and using jemalloc
 # N.B.: The static version of jemalloc is incompatible with the static Swift runtime.
