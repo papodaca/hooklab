@@ -64,6 +64,7 @@
     {#if $selectedProject}
       <button
         on:click={copyToClipboard}
+        aria-label="Copy webhook URL to clipboard"
         class="ml-2 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
       >
         <svg

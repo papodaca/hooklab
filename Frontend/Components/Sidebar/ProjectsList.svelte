@@ -22,12 +22,10 @@
     </button>
   </div>
   <ul id="project-list" class="space-y-1">
-    <li
-      role="button"
-      tabindex="0"
+    <button
       on:click={() => selectProject(null)}
       on:keydown={(e) => e.key === 'Enter' && selectProject(null)}
-      class="project-item flex items-center px-3 py-2 text-sm font-medium rounded-md"
+      class="project-item flex items-center px-3 py-2 text-sm font-medium rounded-md w-full"
       class:bg-gray-100={!$selectedProject}
       class:dark:bg-gray-700={!$selectedProject}
       class:text-gray-900={!$selectedProject}
@@ -42,15 +40,13 @@
         <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a1 1 0 011-1h14a1 1 0 110 2H3a1 1 0 01-1-1z" />
       </svg>
       <span class="truncate">All Projects</span>
-    </li>
+    </button>
     {#each $projects.data as project (project.id)}
       <li>
-        <div
-          role="button"
-          tabindex="0"
+        <button
           on:click={() => selectProject(project)}
           on:keydown={(e) => e.key === 'Enter' && selectProject(project)}
-          class="project-item flex items-center px-3 py-2 text-sm font-medium rounded-md"
+          class="project-item flex items-center px-3 py-2 text-sm font-medium rounded-md w-full"
           class:bg-gray-100={$selectedProject?.id === project.id}
           class:dark:bg-gray-700={$selectedProject?.id === project.id}
           class:text-gray-900={$selectedProject?.id === project.id}
@@ -72,7 +68,7 @@
             class:bg-purple-500={project.color === 'purple'}
           ></span>
           <span class="truncate">{project.name}</span>
-        </div>
+        </button>
       </li>
     {/each}
   </ul>

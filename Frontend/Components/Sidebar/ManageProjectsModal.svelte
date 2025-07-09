@@ -115,15 +115,19 @@
 <div
   class="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
   on:click={close}
+  on:keydown={(e) => e.key === 'Escape' && close()}
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="dialog-title"
+  tabindex="0"
 >
   <div
     class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl"
-    on:click|stopPropagation
   >
     <div
       class="flex justify-between items-center border-b pb-3 border-gray-200 dark:border-gray-700"
     >
-      <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+      <h2 id="dialog-title" class="text-xl font-bold text-gray-900 dark:text-white">
         Manage Projects
       </h2>
       <div class="flex items-center gap-4">
@@ -137,6 +141,7 @@
         <button
           on:click={close}
           class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+          aria-label="Close"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
