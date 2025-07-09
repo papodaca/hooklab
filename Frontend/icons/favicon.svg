@@ -1,0 +1,52 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Flask body and neck combined -->
+  <path d="M70 20 L70 65 L25 150 Q25 180 55 180 L145 180 Q175 180 175 150 L130 65 L130 20 Z" 
+        fill="#e8f4f8" 
+        stroke="#2c5aa0" 
+        stroke-width="4"/>
+  
+  <!-- Flask mouth/opening -->
+  <ellipse cx="100" cy="20" rx="35" ry="6" 
+           fill="#fff" 
+           stroke="#2c5aa0" 
+           stroke-width="4"/>
+  
+  <!-- Liquid inside flask -->
+  <path d="M72 68 L30 145 Q30 170 55 170 L145 170 Q170 170 170 145 L128 68 Z" 
+        fill="#4a90e2" 
+        opacity="0.6"/>
+  
+  <!-- Bubbles in liquid -->
+  <circle cx="80" cy="120" r="4" fill="#87ceeb" opacity="0.8"/>
+  <circle cx="120" cy="140" r="3" fill="#87ceeb" opacity="0.8"/>
+  <circle cx="75" cy="155" r="3.5" fill="#87ceeb" opacity="0.8"/>
+  
+  <!-- Fishing hook -->
+  <g stroke="#666" stroke-width="3.5" fill="none">
+    <!-- Hook eye -->
+    <circle cx="100" cy="60" r="4" stroke="#666" stroke-width="3"/>
+    
+    <!-- Hook shank (straight line down) -->
+    <line x1="100" y1="64" x2="100" y2="120"/>
+    
+    <!-- Hook bend (J-shape curve) -->
+    <path d="M100 120 Q100 135 90 145 Q80 155 65 155 Q50 155 50 140" 
+          stroke="#666" stroke-width="3.5"/>
+    
+    <!-- Hook point (sharp tip pointing up) -->
+    <line x1="50" y1="140" x2="55" y2="125" stroke="#666" stroke-width="3.5"/>
+    
+    <!-- Hook barb -->
+    <path d="M52 130 L58 125" stroke="#666" stroke-width="3"/>
+  </g>
+  
+  <!-- Flask highlight -->
+  <ellipse cx="75" cy="110" rx="12" ry="25" 
+           fill="#fff" 
+           opacity="0.4"/>
+  
+  <!-- Flask base shadow -->
+  <ellipse cx="100" cy="190" rx="50" ry="7" 
+           fill="#000" 
+           opacity="0.2"/>
+</svg>
