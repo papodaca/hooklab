@@ -20,7 +20,7 @@ struct HookController: RouteCollection {
     for (key, value) in req.headers {
       headers[key] = value
     }
-    let call = Call(
+    let call = try Call(
       method: req.method.rawValue,
       headers: headers,
       body: req.body.string ?? "",

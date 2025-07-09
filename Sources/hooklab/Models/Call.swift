@@ -12,11 +12,11 @@ final class Call: Model, Content, @unchecked Sendable {
 
   init() {}
 
-  init(id: UUID? = nil, method: String, headers: [String: String], body: String, project: Project) {
+  init(id: UUID? = nil, method: String, headers: [String: String], body: String, project: Project) throws {
     self.id = id
     self.method = method
     self.headers = headers
     self.body = body
-    self.project = project
+    self.$project.id = try project.requireID()
   }
 }
