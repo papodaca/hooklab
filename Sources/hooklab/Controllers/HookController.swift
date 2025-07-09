@@ -30,6 +30,19 @@ struct HookController: RouteCollection {
       project: project
     )
     try await call.create(on: req.db)
+
+    // Broadcast the new call to all connected WebSocket clients
+    Task {
+        do {
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            let data = try encoder.encode(call)
+            await WebSocketManager.shared.broadcast(message: String(data: data, encoding: .utf8) ?? "")
+        } catch {
+            req.logger.error("Failed to broadcast call: \(error)")
+        }
+    }
+
     return .ok
   }
 }

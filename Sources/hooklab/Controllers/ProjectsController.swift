@@ -18,10 +18,10 @@ struct ProjectsController: RouteCollection {
     try await Project.query(on: req.db).all()
   }
 
-  func create(req: Request) async throws -> Project {
+  func create(req: Request) async throws -> Response {
     let project = try req.content.decode(Project.self)
     try await project.save(on: req.db)
-    return project
+    return try await project.encodeResponse(status: .created, for: req)
   }
 
   func show(req: Request) async throws -> Project {
@@ -37,6 +37,7 @@ struct ProjectsController: RouteCollection {
     }
     let updatedProject = try req.content.decode(Project.self)
     project.name = updatedProject.name
+    project.color = updatedProject.color
     try await project.save(on: req.db)
     return project
   }
@@ -45,6 +46,7 @@ struct ProjectsController: RouteCollection {
     guard let project = try await Project.find(req.parameters.get("id"), on: req.db) else {
       throw Abort(.notFound)
     }
+    try await Call.query(on: req.db).filter(\.$project.$id == project.id!).delete()
     try await project.delete(on: req.db)
     return .ok
   }
