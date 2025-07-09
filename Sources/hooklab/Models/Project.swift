@@ -6,11 +6,13 @@ final class Project: Model, Content, @unchecked Sendable {
 
   @ID(key: .id) var id: UUID?
   @Field(key: "name") var name: String
+  @Field(key: "color") var color: String
 
   init() {}
 
-  init(id: UUID? = nil, name: String) {
+  init(id: UUID? = nil, name: String, color: String) {
     self.id = id
     self.name = name
+    self.color = color
   }
 }

@@ -10,6 +10,7 @@ func routes(_ app: Application) throws {
 
     try api.register(collection: ProjectsController())
     try api.register(collection: HookController())
+    try api.register(collection: CallsController())
 
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 }

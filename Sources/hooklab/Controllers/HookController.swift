@@ -22,6 +22,9 @@ struct HookController: RouteCollection {
     }
     let call = try Call(
       method: req.method.rawValue,
+      path: req.url.path,
+      params: req.url.query ?? "",
+      source: req.peerAddress?.ipAddress ?? "unknown",
       headers: headers,
       body: req.body.string ?? "",
       project: project
