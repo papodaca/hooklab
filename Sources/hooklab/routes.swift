@@ -3,8 +3,7 @@ import Vapor
 
 func routes(_ app: Application) throws {
     app.get { req async throws in
-        //TODO redirect to /projects
-        try await req.view.render("index", ["title": "Hello Vapor!"])
+        req.redirect(to: "index.html", redirectType: .permanent)
     }
 
     try app.register(collection: ProjectsController())

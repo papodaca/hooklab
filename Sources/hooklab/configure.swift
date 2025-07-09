@@ -1,6 +1,5 @@
 import Fluent
 import FluentSQLiteDriver
-import Leaf
 import Path
 import Vapor
 
@@ -38,9 +37,6 @@ public func configure(_ app: Application) async throws {
     }
     app.migrations.add(CreateTables())
     try await app.autoMigrate()
-
-    app.views.use(.leaf)
-    app.leaf.cache.isEnabled = false
 
     // register routes
     try routes(app)
