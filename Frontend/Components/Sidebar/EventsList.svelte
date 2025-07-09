@@ -1,86 +1,53 @@
 <script>
-  import { events, selectedProject, selectedEvent } from '../../stores.js';
+  import { onMount } from 'svelte';
+  import { calls, selectedProject, selectedCall } from '../../stores.js';
+  import EventItem from './EventItem.svelte';
 
-  let filteredEvents;
+  onMount(() => {
+    calls.fetchCalls();
+  });
+
   $: {
-    if ($selectedProject === 'All Projects') {
-      filteredEvents = $events;
+    if ($selectedProject) {
+      calls.fetchCalls($selectedProject.id);
     } else {
-      filteredEvents = $events.filter(e => e.project === $selectedProject);
+      calls.fetchCalls();
     }
   }
 
-  function selectEvent(event) {
-    selectedEvent.set(event);
-    events.update(items =>
-      items.map(e => ({ ...e, active: e.name === event.name }))
-    );
+  function handleSelect(event) {
+    const selected = event.detail;
+    selectedCall.set(selected);
   }
 </script>
 
 <div class="flex-grow overflow-y-auto no-scrollbar">
   <div class="p-4 border-b border-gray-200 dark:border-gray-700">
     <h1 id="events-title" class="text-lg font-bold text-gray-900 dark:text-white">
-      {$selectedProject === 'All Projects' ? 'All Recent Events' : `Events for ${$selectedProject}`}
+      {$selectedProject ? `Events for ${$selectedProject.name}` : 'All Recent Events'}
     </h1>
   </div>
   <nav>
-    <ul>
-      {#each filteredEvents as event}
-        <li
-          class="webhook-item border-b border-gray-200 dark:border-gray-700"
-          class:bg-indigo-50={event.active}
-          class:dark:bg-indigo-900={event.active}
-          class:dark:bg-opacity-50={event.active}
-          class:hover:bg-gray-50={!event.active}
-          class:dark:hover:bg-gray-700={!event.active}
-          class:dark:hover:bg-opacity-50={!event.active}
-        >
-          <div
-            role="button"
-            tabindex="0"
-            on:click={() => selectEvent(event)}
-            on:keydown={(e) => e.key === 'Enter' && selectEvent(event)}
-            class="block p-4"
-          >
-            <div class="flex items-start justify-between">
-              <div class="flex items-center">
-                <span
-                  class="inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs font-semibold text-white ring-4 ring-white dark:ring-gray-800"
-                  class:bg-green-500={event.status === 200}
-                  class:bg-red-500={event.status !== 200}
-                >
-                  {event.status}
-                </span>
-                <div class="ml-3">
-                  <p class="font-semibold text-gray-900 dark:text-white">{event.name}</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">{event.path}</p>
-                </div>
-              </div>
-              <span class="text-xs text-gray-500 dark:text-gray-400">{event.time}</span>
-            </div>
-            <div class="mt-2 pl-10">
-              <span
-                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                class:bg-indigo-100={event.projectColor === 'indigo'}
-                class:text-indigo-800={event.projectColor === 'indigo'}
-                class:dark:bg-indigo-900={event.projectColor === 'indigo'}
-                class:dark:text-indigo-300={event.projectColor === 'indigo'}
-                class:bg-emerald-100={event.projectColor === 'emerald'}
-                class:text-emerald-800={event.projectColor === 'emerald'}
-                class:dark:bg-emerald-900={event.projectColor === 'emerald'}
-                class:dark:text-emerald-300={event.projectColor === 'emerald'}
-                class:bg-rose-100={event.projectColor === 'rose'}
-                class:text-rose-800={event.projectColor === 'rose'}
-                class:dark:bg-rose-900={event.projectColor === 'rose'}
-                class:dark:text-rose-300={event.projectColor === 'rose'}
-              >
-                {event.project}
-              </span>
-            </div>
-          </div>
-        </li>
-      {/each}
-    </ul>
+    {#if $calls.loading}
+      <div class="p-4 text-center text-gray-500 dark:text-gray-400">Loading...</div>
+    {:else if $calls.error}
+      <div class="p-4 text-center text-red-500">{$calls.error}</div>
+    {:else if $calls.data.length === 0}
+      <div class="p-8 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No Events</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by sending a request to your webhook URL.</p>
+      </div>
+    {:else}
+      <ul>
+        {#each $calls.data as call (call.id)}
+          <EventItem event={call} active={call.id === $selectedCall?.id} on:select={handleSelect} />
+        {/each}
+      </ul>
+    {/if}
   </nav>
 </div>
+

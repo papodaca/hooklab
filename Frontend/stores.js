@@ -1,50 +1,136 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
+import { getProjects, getCalls, connectWebSocket } from './api';
 
-export const projects = writable([
-  { name: 'All Projects', active: true },
-  { name: 'My Awesome Project', color: 'indigo' },
-  { name: 'E-commerce Platform', color: 'emerald' },
-  { name: 'Legacy API', color: 'rose' },
-]);
+function createProjectsStore() {
+  const { subscribe, set, update } = writable({
+    data: [],
+    loading: true,
+    error: null,
+  });
 
-const initialEvents = [
-  {
-    status: 200,
-    name: 'user.created',
-    id: 'evt_1J9Xqj2eZvKYlo2ChBqjBvjq',
-    path: 'POST /webhooks/users',
-    time: '2m ago',
-    project: 'My Awesome Project',
-    projectColor: 'indigo',
-    active: true,
-  },
-  {
-    status: 500,
-    name: 'invoice.payment_failed',
-    id: 'evt_2K9Xqj2eZvKYlo2ChBqjBvkq',
-    path: 'POST /webhooks/invoices',
-    time: '22m ago',
-    project: 'E-commerce Platform',
-    projectColor: 'emerald',
-  },
-  {
-    status: 200,
-    name: 'api.key.created',
-    id: 'evt_3L9Xqj2eZvKYlo2ChBqjBvlq',
-    path: 'POST /webhooks/apikeys',
-    time: '1h ago',
-    project: 'Legacy API',
-    projectColor: 'rose',
-  },
-];
+  async function fetchProjects() {
+    update(store => ({ ...store, loading: true, error: null }));
+    try {
+      const projects = await getProjects();
+      set({ data: projects, loading: false, error: null });
+    } catch (error) {
+      set({ data: [], loading: false, error: 'Failed to fetch projects.' });
+    }
+  }
 
-export const events = writable(initialEvents);
+  return {
+    subscribe,
+    fetchProjects,
+    update,
+    set,
+  };
+}
 
-const activeEvent = initialEvents.find(e => e.active === true);
+export const projects = createProjectsStore();
+
+function createCallsStore() {
+  const { subscribe, set, update } = writable({
+    data: [],
+    loading: true,
+    error: null,
+  });
+
+  async function fetchCalls(projectId) {
+    update(store => ({ ...store, loading: true, error: null }));
+    try {
+      const calls = await getCalls(projectId);
+      set({ data: calls, loading: false, error: null });
+      if (calls.length > 0) {
+        selectedCall.set(calls[0]);
+      }
+    } catch (error) {
+      set({ data: [], loading: false, error: 'Failed to fetch calls.' });
+    }
+  }
+
+  function prependCall(call) {
+    update(store => {
+      return {
+        ...store,
+        data: [call, ...store.data],
+      };
+    });
+  }
+
+  return {
+    subscribe,
+    fetchCalls,
+    prependCall,
+  };
+}
+
+export const calls = createCallsStore();
+
+export function initializeRealtime() {
+  connectWebSocket(newCall => {
+    calls.prependCall(newCall);
+  });
+}
+
+function createSelectedProjectStore() {
+  const getProjectIdFromHash = () => {
+    if (typeof window === 'undefined') return null;
+    const hash = window.location.hash.substring(1);
+    if (hash.startsWith('project=')) {
+      return hash.substring('project='.length);
+    }
+    return null;
+  };
+
+  const store = writable(null);
+  let initialProjectId = getProjectIdFromHash();
+
+  projects.subscribe(p => {
+    if (p.data.length > 0 && initialProjectId) {
+      const projectFromHash = p.data.find(proj => proj.id === initialProjectId);
+      if (projectFromHash) {
+        store.set(projectFromHash);
+        initialProjectId = null; // Clear after setting
+      }
+    }
+  });
+
+  store.subscribe(value => {
+    if (typeof window !== 'undefined') {
+      if (value) {
+        const currentHash = `#project=${value.id}`;
+        if (window.location.hash !== currentHash) {
+          window.history.pushState(null, '', currentHash);
+        }
+      } else {
+        if (window.location.hash) {
+          window.history.pushState(null, '', window.location.pathname + window.location.search);
+        }
+      }
+    }
+  });
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('hashchange', () => {
+      const projectId = getProjectIdFromHash();
+      const currentProjects = get(projects).data;
+      if (projectId) {
+        const projectFromHash = currentProjects.find(p => p.id === projectId);
+        if (projectFromHash) {
+          store.set(projectFromHash);
+        }
+      } else {
+        store.set(null);
+      }
+    });
+  }
+
+  return store;
+}
+
 
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-export const selectedProject = writable('All Projects');
-export const selectedEvent = writable(activeEvent || null);
+export const selectedProject = createSelectedProjectStore();
+export const selectedCall = writable(null);
 export const theme = writable(prefersDark ? 'dark' : 'light');
-

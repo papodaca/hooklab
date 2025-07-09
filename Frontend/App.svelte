@@ -1,7 +1,12 @@
 <script>
+  import { onMount } from 'svelte';
   import Sidebar from "./Components/Sidebar.svelte";
   import MainContent from "./Components/MainContent.svelte";
-  import { theme } from "./stores.js";
+  import { theme, initializeRealtime } from "./stores.js";
+
+  onMount(() => {
+    initializeRealtime();
+  });
 
   $: {
     if (typeof document !== "undefined") {
