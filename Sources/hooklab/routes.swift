@@ -3,12 +3,12 @@ import Vapor
 
 func routes(_ app: Application) throws {
     app.get { req async throws in
+        //TODO redirect to /projects
         try await req.view.render("index", ["title": "Hello Vapor!"])
     }
 
-    app.get("hello") { req async -> String in
-        "Hello, world!"
-    }
+    try app.register(collection: ProjectsController())
+    try app.register(collection: HookController())
 
-    try app.register(collection: TodoController())
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 }
