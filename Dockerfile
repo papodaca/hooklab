@@ -73,7 +73,7 @@ WORKDIR /app
 
 # Copy built executable and any staged resources from builder
 # The nonroot user has UID 65532.
-COPY --from=build --chown=65532:65532 /staging /app
+COPY --from=build --chown=65532:65532 /staging/hooklab /app
 
 # Provide configuration needed by the built-in crash reporter and some sensible default behaviors.
 ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace-static
