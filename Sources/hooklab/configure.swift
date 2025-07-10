@@ -5,11 +5,14 @@ import Vapor
 
 // configures your application
 public func configure(_ app: Application) async throws {
-    if app.environment.isRelease {
+    #if !DEBUG
         app.middleware.use(EmbeddedFileMiddleware())
-    } else {
-        app.middleware.use(FileMiddleware(publicDirectory: app.directory.workingDirectory + "Public/", defaultFile: "index.html"))
-    }
+    #else
+        app.middleware.use(
+            FileMiddleware(
+                publicDirectory: app.directory.workingDirectory + "Public/",
+                defaultFile: "index.html"))
+    #endif
 
     if app.environment == .testing {
         app.databases.use(.sqlite(.memory), as: .sqlite)
