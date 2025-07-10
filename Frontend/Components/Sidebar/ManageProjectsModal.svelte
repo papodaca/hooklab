@@ -114,7 +114,7 @@
 
 <div
   class="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
-  on:click={close}
+  on:click={(e) => { if (e.target === e.currentTarget) close() }}
   on:keydown={(e) => e.key === 'Escape' && close()}
   role="dialog"
   aria-modal="true"
