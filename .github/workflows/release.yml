@@ -2,7 +2,8 @@ name: Swift Release
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - 'v*'
 
 jobs:
   build-frontend:
@@ -33,9 +34,9 @@ jobs:
       with:
         name: public-folder
         path: Public
-    - uses: swift-actions/setup-swift@v2.3.0
+    - uses: swift-actions/setup-swift@v2
       with:
-        swift-version: "6.1"
+        swift-version: "6.0"
     - name: Build macOS arm64
       run: swift build -c release --arch arm64
     - name: Upload macOS arm64 artifact
@@ -90,30 +91,9 @@ jobs:
         name: hooklab-linux-arm64
         path: .build/aarch64-unknown-linux-gnu/release/hooklab
 
-  # build-windows:
-  #   runs-on: windows-latest
-  #   needs: build-frontend
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Download frontend artifact
-  #     uses: actions/download-artifact@v4
-  #     with:
-  #       name: public-folder
-  #       path: Public
-  #   - uses: swift-actions/setup-swift@v2
-  #     with:
-  #       swift-version: "6.0"
-  #   - name: Build Windows
-  #     run: swift build -c release
-  #   - name: Upload Windows artifact
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: hooklab-windows
-  #       path: .build/release/hooklab.exe
-
   release:
     runs-on: ubuntu-latest
-    needs: [build-macos, build-linux-x86_64, build-linux-arm64, build-windows]
+    needs: [build-macos, build-linux-x86_64, build-linux-arm64]
     steps:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
@@ -125,8 +105,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
     - name: Upload macOS arm64 Release Asset
@@ -164,13 +144,4 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: artifacts/hooklab-linux-arm64/hooklab
         asset_name: hooklab-linux-arm64
-        asset_content_type: application/octet-stream
-    - name: Upload Windows Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/hooklab-windows/hooklab.exe
-        asset_name: hooklab-windows.exe
         asset_content_type: application/octet-stream
