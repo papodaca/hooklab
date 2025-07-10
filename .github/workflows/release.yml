@@ -1,0 +1,131 @@
+name: Swift Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build macOS arm64
+      run: swift build -c release --arch arm64
+    - name: Upload macOS arm64 artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: hooklab-macos-arm64
+        path: .build/arm64-apple-macosx/release/hooklab
+    - name: Build macOS x86_64
+      run: swift build -c release --arch x86_64
+    - name: Upload macOS x86_64 artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: hooklab-macos-x86_64
+        path: .build/x86_64-apple-macosx/release/hooklab
+
+  build-linux-x86_64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Linux x86_64
+      run: swift build -c release
+    - name: Upload Linux x86_64 artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: hooklab-linux-x86_64
+        path: .build/release/hooklab
+
+  build-linux-arm64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Build Linux arm64
+      run: |
+        docker run --rm -v "$(pwd)":/workspace -w /workspace --platform linux/arm64 swift:6.1 /bin/bash -c "swift build -c release --triple aarch64-unknown-linux-gnu"
+    - name: Upload Linux arm64 artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: hooklab-linux-arm64
+        path: .build/aarch64-unknown-linux-gnu/release/hooklab
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "5.8"
+    - name: Build Windows
+      run: swift build -c release
+    - name: Upload Windows artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: hooklab-windows
+        path: .build/release/hooklab.exe
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build-macos, build-linux-x86_64, build-linux-arm64, build-windows]
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
+    - name: Upload macOS arm64 Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: artifacts/hooklab-macos-arm64/hooklab
+        asset_name: hooklab-macos-arm64
+        asset_content_type: application/octet-stream
+    - name: Upload macOS x86_64 Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: artifacts/hooklab-macos-x86_64/hooklab
+        asset_name: hooklab-macos-x86_64
+        asset_content_type: application/octet-stream
+    - name: Upload Linux x86_64 Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: artifacts/hooklab-linux-x86_64/hooklab
+        asset_name: hooklab-linux-x86_64
+        asset_content_type: application/octet-stream
+    - name: Upload Linux arm64 Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: artifacts/hooklab-linux-arm64/hooklab
+        asset_name: hooklab-linux-arm64
+        asset_content_type: application/octet-stream
+    - name: Upload Windows Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: artifacts/hooklab-windows/hooklab.exe
+        asset_name: hooklab-windows.exe
+        asset_content_type: application/octet-stream
