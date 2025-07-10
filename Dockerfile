@@ -59,24 +59,28 @@ RUN cp "/usr/libexec/swift/linux/swift-backtrace-static" ./
 # Copy resources bundled by SPM to staging area
 RUN find -L "$(swift build --package-path /build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} ./ \;
 
+RUN mkdir -p /staging/lib
+RUN cp /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /staging/lib/
+RUN cp /usr/lib/$(uname -m)-linux-gnu/libz.so.1 /staging/lib/
+
 # ================================
 # Run image
 # ================================
 FROM gcr.io/distroless/cc-debian12
 
-# Copy required libraries from the build stage
-COPY --from=build /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/x86_64-linux-gnu/
-COPY --from=build /usr/lib/x86_64-linux-gnu/libz.so.1 /usr/lib/x86_64-linux-gnu/
+# Copy required libraries from the build stage to a generic location
+COPY --from=build /staging/lib/* /usr/local/lib/
 
 # Set the working directory
 WORKDIR /app
 
 # Copy built executable and any staged resources from builder
 # The nonroot user has UID 65532.
-COPY --from=build --chown=65532:65532 /staging/hooklab /app
+COPY --from=build --chown=65532:65532 /staging /app
 
 # Provide configuration needed by the built-in crash reporter and some sensible default behaviors.
 ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace-static
+ENV LD_LIBRARY_PATH=/usr/local/lib
 
 # Let Docker bind to port 8080
 EXPOSE 8080
