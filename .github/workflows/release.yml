@@ -5,10 +5,34 @@ on:
     branches: [ main ]
 
 jobs:
-  build-macos:
-    runs-on: macos-latest
+  build-frontend:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - name: Install dependencies
+      run: yarn install
+    - name: Build frontend
+      run: yarn build
+    - name: Upload frontend artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: public-folder
+        path: Public/
+
+  build-macos:
+    runs-on: macos-latest
+    needs: build-frontend
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download frontend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: public-folder
+        path: Public
     - uses: swift-actions/setup-swift@v2
       with:
         swift-version: "6.1"
@@ -29,8 +53,14 @@ jobs:
 
   build-linux-x86_64:
     runs-on: ubuntu-latest
+    needs: build-frontend
     steps:
     - uses: actions/checkout@v4
+    - name: Download frontend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: public-folder
+        path: Public
     - name: Build Linux x86_64
       run: swift build -c release
     - name: Upload Linux x86_64 artifact
@@ -41,8 +71,14 @@ jobs:
 
   build-linux-arm64:
     runs-on: ubuntu-latest
+    needs: build-frontend
     steps:
     - uses: actions/checkout@v4
+    - name: Download frontend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: public-folder
+        path: Public
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Build Linux arm64
@@ -56,11 +92,17 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
+    needs: build-frontend
     steps:
     - uses: actions/checkout@v4
+    - name: Download frontend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: public-folder
+        path: Public
     - uses: swift-actions/setup-swift@v2
       with:
-        swift-version: "5.8"
+        swift-version: "6.1"
     - name: Build Windows
       run: swift build -c release
     - name: Upload Windows artifact
