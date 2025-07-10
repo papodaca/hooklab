@@ -1,0 +1,40 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:hooklab}",
+      "name": "Debug hooklab",
+      "program": "${workspaceFolder:hooklab}/.build/debug/hooklab",
+      "preLaunchTask": "swift: Build Debug hooklab"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:hooklab}",
+      "name": "Release hooklab",
+      "program": "${workspaceFolder:hooklab}/.build/release/hooklab",
+      "preLaunchTask": "swift: Build Release hooklab"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:hooklab}",
+      "name": "Debug asset-generator",
+      "program": "${workspaceFolder:hooklab}/.build/debug/asset-generator",
+      "preLaunchTask": "swift: Build Debug asset-generator"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:hooklab}",
+      "name": "Release asset-generator",
+      "program": "${workspaceFolder:hooklab}/.build/release/asset-generator",
+      "preLaunchTask": "swift: Build Release asset-generator"
+    }
+  ]
+}
