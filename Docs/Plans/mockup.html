@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webhook Inspector - Projects</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Hide scrollbar for aesthetics but allow scrolling */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300">
+  <div class="flex h-screen">
+    <!-- Sidebar: Project Filter and Webhook List -->
+    <aside class="w-1/3 xl:w-1/4 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+
+      <!-- Webhook List Section -->
+      <div class="flex-grow overflow-y-auto no-scrollbar">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h1 id="events-title" class="text-lg font-bold text-gray-900 dark:text-white">All Recent Events</h1>
+        </div>
+        <nav>
+          <ul>
+            <!-- Active Webhook Item -->
+            <li class="webhook-item border-b border-gray-200 dark:border-gray-700 bg-indigo-50 dark:bg-indigo-900/50">
+              <a href="#" class="block p-4">
+                <div class="flex items-center justify-between">
+                  <p class="font-semibold text-gray-900 dark:text-white truncate">user.created</p>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 ml-4">2m ago</span>
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                  <div class="flex items-center gap-2 text-sm">
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">POST</span>
+                    <span class="font-mono text-gray-500 dark:text-gray-400">172.18.0.1</span>
+                  </div>
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">
+                    My Awesome Project
+                  </span>
+                </div>
+              </a>
+            </li>
+            <!-- More items... -->
+            <li
+              class="webhook-item border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+              <a href="#" class="block p-4">
+                <div class="flex items-center justify-between">
+                  <p class="font-semibold text-gray-900 dark:text-white truncate">invoice.retrieved</p>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 ml-4">15m ago</span>
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                  <div class="flex items-center gap-2 text-sm">
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">GET</span>
+                    <span class="font-mono text-gray-500 dark:text-gray-400">34.125.10.241</span>
+                  </div>
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300">
+                    E-commerce Platform
+                  </span>
+                </div>
+              </a>
+            </li>
+            <li
+              class="webhook-item border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+              <a href="#" class="block p-4">
+                <div class="flex items-center justify-between">
+                  <p class="font-semibold text-gray-900 dark:text-white truncate">user.updated</p>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 ml-4">45m ago</span>
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                  <div class="flex items-center gap-2 text-sm">
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300">PUT</span>
+                    <span class="font-mono text-gray-500 dark:text-gray-400">172.18.0.1</span>
+                  </div>
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">
+                    My Awesome Project
+                  </span>
+                </div>
+              </a>
+            </li>
+            <li
+              class="webhook-item border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+              <a href="#" class="block p-4">
+                <div class="flex items-center justify-between">
+                  <p class="font-semibold text-gray-900 dark:text-white truncate">api.key.deleted</p>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 ml-4">1h ago</span>
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                  <div class="flex items-center gap-2 text-sm">
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">DELETE</span>
+                    <span class="font-mono text-gray-500 dark:text-gray-400">192.168.1.10</span>
+                  </div>
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300">
+                    Legacy API
+                  </span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Projects List Section -->
+      <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+        <h2 class="mb-2 text-lg font-bold text-gray-900 dark:text-white">Projects</h2>
+        <ul id="project-list" class="space-y-1">
+          <li>
+            <a href="#"
+              class="project-item flex items-center px-3 py-2 text-sm font-medium rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+              data-project-name="All Projects">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2.5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a1 1 0 011-1h14a1 1 0 110 2H3a1 1 0 01-1-1z" />
+              </svg>
+              <span>All Projects</span>
+            </a>
+          </li>
+          <li>
+            <a href="#"
+              class="project-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+              data-project-name="My Awesome Project">
+              <span class="w-2 h-2 mr-3 bg-indigo-500 rounded-full flex-shrink-0"></span>
+              <span class="truncate">My Awesome Project</span>
+            </a>
+          </li>
+          <li>
+            <a href="#"
+              class="project-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+              data-project-name="E-commerce Platform">
+              <span class="w-2 h-2 mr-3 bg-emerald-500 rounded-full flex-shrink-0"></span>
+              <span class="truncate">E-commerce Platform</span>
+            </a>
+          </li>
+          <li>
+            <a href="#"
+              class="project-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+              data-project-name="Legacy API">
+              <span class="w-2 h-2 mr-3 bg-rose-500 rounded-full flex-shrink-0"></span>
+              <span class="truncate">Legacy API</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content: Webhook Detail -->
+    <main class="w-2/3 xl:w-3/4 flex flex-col bg-slate-50 dark:bg-slate-900/50">
+      <header
+        class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-sm z-10">
+        <div>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">user.created</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">ID: evt_1J9Xqj2eZvKYlo2ChBqjBvjq</p>
+        </div>
+        <div class="flex items-center gap-4">
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">POST</span>
+          <button id="theme-toggle"
+            class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900">
+            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+            </svg>
+            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.464A1 1 0 106.465 13.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 11a1 1 0 100-2H4a1 1 0 100 2h1zM8 16a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zM3 10a1 1 0 01-1-1V7a1 1 0 112 0v2a1 1 0 01-1 1zm14-1V7a1 1 0 112 0v2a1 1 0 11-2 0z"
+                fill-rule="evenodd" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="flex-grow overflow-y-auto no-scrollbar p-6 space-y-6">
+        <!-- Headers Section -->
+        <section>
+          <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Headers</h3>
+          <div class="text-sm font-mono bg-white dark:bg-gray-800 p-4 rounded-lg overflow-x-auto shadow-sm">
+            <pre><code class="language-json">{
+    "Content-Type": "application/json",
+    "User-Agent": "Stripe/1.0 (+https://stripe.com/docs/webhooks)",
+    "Stripe-Signature": "v1=..."
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- Payload Section -->
+        <section>
+          <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Payload</h3>
+          <div class="text-sm font-mono bg-white dark:bg-gray-800 p-4 rounded-lg overflow-x-auto shadow-sm">
+            <pre><code class="language-json">{
+  "id": "evt_1J9Xqj2eZvKYlo2ChBqjBvjq",
+  "object": "event",
+  "api_version": "2020-08-27",
+  "created": 1625078539,
+  "data": {
+    "object": {
+      "id": "cus_Jq4h7C6A2Z0p9q",
+      "object": "customer",
+      "created": 1625078539,
+      "description": "New customer for test@example.com",
+      "email": "test@example.com",
+      "metadata": {
+        "project_id": "proj_a1b2c3d4"
+      }
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": "req_1J9Xqj2eZvKYlo2C",
+    "idempotency_key": "some-unique-key-for-this-request"
+  },
+  "type": "customer.created"
+}</code></pre>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- Theme Toggle Functionality ---
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const darkIcon = document.getElementById('theme-toggle-dark-icon');
+      const lightIcon = document.getElementById('theme-toggle-light-icon');
+      const body = document.body;
+
+      const applyTheme = (isDark) => {
+        body.classList.toggle('dark', isDark);
+        darkIcon.classList.toggle('hidden', !isDark);
+        lightIcon.classList.toggle('hidden', isDark);
+      };
+
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      applyTheme(prefersDark.matches);
+      prefersDark.addEventListener('change', (e) => applyTheme(e.matches));
+      themeToggleBtn.addEventListener('click', () => applyTheme(!body.classList.contains('dark')));
+
+      // --- Project List Functionality ---
+      const projectList = document.getElementById('project-list');
+      const eventsTitle = document.getElementById('events-title');
+
+      projectList.addEventListener('click', function (e) {
+        const clickedItem = e.target.closest('.project-item');
+        if (!clickedItem) return;
+
+        e.preventDefault();
+
+        // Remove active styles from all items
+        this.querySelectorAll('.project-item').forEach(item => {
+          item.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-white');
+          item.classList.add('text-gray-600', 'dark:text-gray-300', 'hover:bg-gray-50', 'dark:hover:bg-gray-700/50');
+        });
+
+        // Add active styles to the clicked item
+        clickedItem.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-white');
+        clickedItem.classList.remove('text-gray-600', 'dark:text-gray-300', 'hover:bg-gray-50', 'dark:hover:bg-gray-700/50');
+
+        const projectName = clickedItem.getAttribute('data-project-name');
+
+        // Update the events list title
+        if (projectName === 'All Projects') {
+          eventsTitle.textContent = 'All Recent Events';
+        } else {
+          eventsTitle.textContent = `Events for ${projectName}`;
+        }
+
+        console.log(`Switched to project: ${projectName}`);
+        // In a real app, you would now filter the events list based on the selected project.
+        // For this demo, we just log to the console.
+      });
+    });
+  </script>
+</body>
+
+</html>i've 
