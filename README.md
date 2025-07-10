@@ -4,7 +4,7 @@ HookLab is a powerful and developer-friendly tool for inspecting and debugging w
 
 This project is a full-stack application built with a **Vapor (Swift)** backend and a **Svelte** frontend, fully containerized with **Docker**.
 
-![Screenshot of HookLab](./Docs/Screenshots/Screenshot%20from%202025-07-08%2020-21-17.png)
+![Screenshot of HookLab](./Docs/Pics/screenshot.png)
 
 ## Features
 
