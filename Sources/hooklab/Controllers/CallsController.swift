@@ -22,7 +22,7 @@ struct CallsController: RouteCollection {
       query.filter(\.$project.$id == projectId)
     }
 
-    return try await query.sort(\.$time, .descending).all()
+    return try await query.with(\.$project).sort(\.$time, .descending).all()
   }
 
   func show(req: Request) async throws -> Call {

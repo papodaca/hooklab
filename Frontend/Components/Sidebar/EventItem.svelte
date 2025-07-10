@@ -1,15 +1,14 @@
 <script>
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
-  import { projects } from "../../stores.js";
   import MethodPill from "../MethodPill.svelte";
-  import { formatDistanceToNow } from 'date-fns';
+  import { formatDistanceToNow } from "date-fns";
 
   export let event;
   export let active = false;
 
   const dispatch = createEventDispatcher();
 
-  let timeAgo = '';
+  let timeAgo = "";
   let interval;
 
   onMount(() => {
@@ -25,13 +24,6 @@
 
   function select() {
     dispatch("select", event);
-  }
-
-  let project;
-  $: {
-    if ($projects.data && event.project_id) {
-      project = $projects.data.find(p => p.id === event.project_id);
-    }
   }
 </script>
 
@@ -69,38 +61,37 @@
           >{event.source}</span
         >
       </div>
-      {#if project}
+      {#if event.project !== null}
         <span
           class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-          class:bg-indigo-100={project.color === "indigo"}
-          class:text-indigo-800={project.color === "indigo"}
-          class:dark:bg-indigo-900={project.color === "indigo"}
-          class:dark:text-indigo-300={project.color === "indigo"}
-          class:bg-emerald-100={project.color === "emerald"}
-          class:text-emerald-800={project.color === "emerald"}
-          class:dark:bg-emerald-900={project.color === "emerald"}
-          class:dark:text-emerald-300={project.color === "emerald"}
-          class:bg-rose-100={project.color === "rose"}
-          class:text-rose-800={project.color === "rose"}
-          class:dark:bg-rose-900={project.color === "rose"}
-          class:dark:text-rose-300={project.color === "rose"}
-          class:bg-amber-100={project.color === "amber"}
-          class:text-amber-800={project.color === "amber"}
-          class:dark:bg-amber-900={project.color === "amber"}
-          class:dark:text-amber-300={project.color === "amber"}
-          class:bg-sky-100={project.color === "sky"}
-          class:text-sky-800={project.color === "sky"}
-          class:dark:bg-sky-900={project.color === "sky"}
-          class:dark:text-sky-300={project.color === "sky"}
-          class:bg-purple-100={project.color === "purple"}
-          class:text-purple-800={project.color === "purple"}
-          class:dark:bg-purple-900={project.color === "purple"}
-          class:dark:text-purple-300={project.color === "purple"}
+          class:bg-indigo-100={event.project.color === "indigo"}
+          class:text-indigo-800={event.project.color === "indigo"}
+          class:dark:bg-indigo-900={event.project.color === "indigo"}
+          class:dark:text-indigo-300={event.project.color === "indigo"}
+          class:bg-emerald-100={event.project.color === "emerald"}
+          class:text-emerald-800={event.project.color === "emerald"}
+          class:dark:bg-emerald-900={event.project.color === "emerald"}
+          class:dark:text-emerald-300={event.project.color === "emerald"}
+          class:bg-rose-100={event.project.color === "rose"}
+          class:text-rose-800={event.project.color === "rose"}
+          class:dark:bg-rose-900={event.project.color === "rose"}
+          class:dark:text-rose-300={event.project.color === "rose"}
+          class:bg-amber-100={event.project.color === "amber"}
+          class:text-amber-800={event.project.color === "amber"}
+          class:dark:bg-amber-900={event.project.color === "amber"}
+          class:dark:text-amber-300={event.project.color === "amber"}
+          class:bg-sky-100={event.project.color === "sky"}
+          class:text-sky-800={event.project.color === "sky"}
+          class:dark:bg-sky-900={event.project.color === "sky"}
+          class:dark:text-sky-300={event.project.color === "sky"}
+          class:bg-purple-100={event.project.color === "purple"}
+          class:text-purple-800={event.project.color === "purple"}
+          class:dark:bg-purple-900={event.project.color === "purple"}
+          class:dark:text-purple-300={event.project.color === "purple"}
         >
-          {project.name}
+          {event.project.name}
         </span>
       {/if}
     </div>
   </div>
 </li>
-
