@@ -3,6 +3,7 @@
   import { getCallDetails } from "../../api.js";
   import MethodPill from "../MethodPill.svelte";
   import RequestDetails from "./RequestDetails.svelte";
+  import { Inbox } from "@lucide/svelte";
 
   let detailedCall = null;
   let isLoading = false;
@@ -63,20 +64,7 @@
   </div>
 {:else}
   <div class="flex flex-col items-center justify-center h-full text-center">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="w-24 h-24 text-gray-300 dark:text-gray-600 animate-pulse"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      stroke-width="1"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M3 15v4a2 2 0 002 2h14a2 2 0 002-2v-4M17 9l-5 5-5-5M12 14.25V3"
-      />
-    </svg>
+    <Inbox class="w-24 h-24 text-gray-300 dark:text-gray-600 animate-pulse" />
     <p class="text-gray-500 dark:text-gray-400 mt-4 text-lg">
       Waiting for incoming events...
     </p>
