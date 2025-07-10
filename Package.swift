@@ -24,7 +24,22 @@ let package = Package(
                 .product(name: "Path", package: "Path.swift"),
                 .product(name: "Vapor", package: "vapor"),
             ],
-            swiftSettings: swiftSettings
+            swiftSettings: swiftSettings,
+            plugins: [
+                .plugin(name: "GenerateAssets")
+            ]
+        ),
+        .executableTarget(
+            name: "asset-generator",
+            path: "Sources/asset-generator"
+        ),
+        .plugin(
+            name: "GenerateAssets",
+            capability: .buildTool(),
+            dependencies: [
+                .target(name: "asset-generator")
+            ],
+            path: "Plugins"
         ),
         .testTarget(
             name: "hooklabTests",

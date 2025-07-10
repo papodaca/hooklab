@@ -12,6 +12,7 @@ export default defineConfig({
     svelte()
   ],
   build: {
+    chunkSizeWarningLimit: "1024",
     sourcemap: 'inline',
     outDir: "Public",
     emptyOutDir: true,

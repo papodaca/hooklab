@@ -19,7 +19,6 @@
     "dev": "vite build --watch"
   },
   "dependencies": {
-    "@iconify/svelte": "^5.0.0",
     "@lucide/svelte": "^0.515.0",
     "clx": "^1.0.0",
     "date-fns": "^4.1.0",

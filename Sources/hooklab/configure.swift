@@ -5,8 +5,11 @@ import Vapor
 
 // configures your application
 public func configure(_ app: Application) async throws {
-    // uncomment to serve files from /Public folder
-    // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    if app.environment.isRelease {
+        app.middleware.use(EmbeddedFileMiddleware())
+    } else {
+        app.middleware.use(FileMiddleware(publicDirectory: app.directory.workingDirectory + "Public/", defaultFile: "index.html"))
+    }
 
     if app.environment == .testing {
         app.databases.use(.sqlite(.memory), as: .sqlite)
