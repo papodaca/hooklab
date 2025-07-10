@@ -33,7 +33,7 @@ jobs:
       with:
         name: public-folder
         path: Public
-    - uses: swift-actions/setup-swift@v2
+    - uses: swift-actions/setup-swift@v2.3.0
       with:
         swift-version: "6.1"
     - name: Build macOS arm64
@@ -90,26 +90,26 @@ jobs:
         name: hooklab-linux-arm64
         path: .build/aarch64-unknown-linux-gnu/release/hooklab
 
-  build-windows:
-    runs-on: windows-latest
-    needs: build-frontend
-    steps:
-    - uses: actions/checkout@v4
-    - name: Download frontend artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: public-folder
-        path: Public
-    - uses: swift-actions/setup-swift@v2
-      with:
-        swift-version: "6.0"
-    - name: Build Windows
-      run: swift build -c release
-    - name: Upload Windows artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: hooklab-windows
-        path: .build/release/hooklab.exe
+  # build-windows:
+  #   runs-on: windows-latest
+  #   needs: build-frontend
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Download frontend artifact
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: public-folder
+  #       path: Public
+  #   - uses: swift-actions/setup-swift@v2
+  #     with:
+  #       swift-version: "6.0"
+  #   - name: Build Windows
+  #     run: swift build -c release
+  #   - name: Upload Windows artifact
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: hooklab-windows
+  #       path: .build/release/hooklab.exe
 
   release:
     runs-on: ubuntu-latest
