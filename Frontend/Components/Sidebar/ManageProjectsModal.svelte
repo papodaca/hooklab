@@ -198,7 +198,7 @@
               class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
             >
               {#if newProject}
-                <tr transition:slide={{ duration: 200 }}>
+                <tr>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <input
                       type="text"
@@ -241,7 +241,7 @@
               {/if}
               {#each $projects.data as project (project.id)}
                 {#if editingProject && editingProject.id === project.id}
-                  <tr transition:slide={{ duration: 200 }}>
+                  <tr>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <input
                         type="text"
