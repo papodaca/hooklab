@@ -1,5 +1,11 @@
 import Vapor
 
+#if os(macOS)
+    import Compression
+#elseif os(Linux)
+    import Gzip
+#endif
+
 #if !DEBUG
     struct EmbeddedFileMiddleware: AsyncMiddleware {
         func respond(to request: Request, chainingTo next: any AsyncResponder) async throws
@@ -30,11 +36,24 @@ import Vapor
         private func response(for bytes: [UInt8], with request: Request, fileExtension: String)
             -> Response
         {
-            var headers = HTTPHeaders()
-            headers.contentType = HTTPMediaType.fileExtension(fileExtension) ?? .plainText
-            var buffer = request.application.allocator.buffer(capacity: bytes.count)
-            buffer.writeBytes(bytes)
-            return Response(status: .ok, headers: headers, body: .init(buffer: buffer))
+            do {
+                let outputData: Data
+                #if os(macOS)
+                    outputData = try (Data(bytes) as NSData).decompressed(using: .zlib)
+                #elseif os(Linux)
+                    outputData = try Data(bytes).gunzipped()
+                #else
+                    outputData = Data(bytes)
+                #endif
+                var headers = HTTPHeaders()
+                headers.contentType = HTTPMediaType.fileExtension(fileExtension) ?? .plainText
+                var buffer = request.application.allocator.buffer(capacity: outputData.count)
+                buffer.writeBytes(outputData)
+                return Response(status: .ok, headers: headers, body: .init(buffer: buffer))
+            } catch {
+                return Response(
+                    status: .internalServerError, body: .init(string: "Failed to decompress file"))
+            }
         }
     }
 #endif

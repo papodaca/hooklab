@@ -12,6 +12,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.8.1"),
         .package(url: "https://github.com/vapor/fluent.git", from: "4.12.0"),
         .package(url: "https://github.com/vapor/vapor.git", from: "4.115.0"),
+        .package(url: "https://github.com/1024jp/GzipSwift.git", from: "6.1.0"),
     ],
     targets: [
         .executableTarget(
@@ -23,6 +24,7 @@ let package = Package(
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "Path", package: "Path.swift"),
                 .product(name: "Vapor", package: "vapor"),
+                .product(name: "Gzip", package: "GzipSwift"),
             ],
             swiftSettings: swiftSettings,
             plugins: [
@@ -31,6 +33,9 @@ let package = Package(
         ),
         .executableTarget(
             name: "asset-generator",
+            dependencies: [
+                .product(name: "Gzip", package: "GzipSwift")
+            ],
             path: "Sources/asset-generator"
         ),
         .plugin(
