@@ -5,17 +5,11 @@ import Vapor
 
 // configures your application
 public func configure(_ app: Application) async throws {
-    #if !DEBUG
-        app.middleware.use(EmbeddedFileMiddleware())
-    #else
-        app.middleware.use(
-            FileMiddleware(
-                publicDirectory: app.directory.workingDirectory + "Public/",
-                defaultFile: "index.html"))
-    #endif
+    var databaseCreated = false
 
     if app.environment == .testing {
         app.databases.use(.sqlite(.memory), as: .sqlite)
+        databaseCreated = true
     } else {
         let prefPath = prefrencesPath(app)
         let prefDir = Path.root.join(prefPath.path()).join("hooklab")
@@ -35,14 +29,17 @@ public func configure(_ app: Application) async throws {
         if !dbPath.isFile {
             app.logger.info("creating new database \(dbPath)")
             try dbPath.touch()
+            databaseCreated = true
         } else {
             app.logger.info("database file seems to exist, mobing on \(dbPath)")
         }
 
         app.databases.use(.sqlite(.file(dbPath.string)), as: .sqlite)
     }
-    app.migrations.add(CreateTables())
-    try await app.autoMigrate()
+    if databaseCreated {
+        app.migrations.add(CreateTables())
+        try await app.autoMigrate()
+    }
 
     // register routes
     try routes(app)

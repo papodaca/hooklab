@@ -12,5 +12,12 @@ func routes(_ app: Application) throws {
     try api.register(collection: HookController())
     try api.register(collection: CallsController())
 
-    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    #if !DEBUG
+        app.middleware.use(EmbeddedFileMiddleware())
+    #else
+        app.middleware.use(
+            FileMiddleware(
+                publicDirectory: app.directory.workingDirectory + "Public/",
+                defaultFile: "index.html"))
+    #endif
 }
